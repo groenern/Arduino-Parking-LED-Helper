@@ -19,7 +19,7 @@ void setup() {
 
 void loop() {
   long duration, inches, cm;
-  int numLeds = 0;
+  int loopCounter = 0, numLeds = 0;
 
   pinMode(PING_PIN, OUTPUT);
   digitalWrite(PING_PIN, LOW);
@@ -43,12 +43,23 @@ void loop() {
   if (cm >= ledMaxDistance) {
     fill_solid(leds, NUM_LEDS, CRGB::Black); // out of range... nothing lit up 
   } else if (cm <= ledMinDistance) { // flash red on and off 
-    fill_solid(leds, NUM_LEDS, CRGB::Red);
-    FastLED.show();
-    delay(flashDelay);
+    while(cm <= ledMinDistance) { 
+      if (loopCounter < 100) { 
+        fill_solid(leds, NUM_LEDS, CRGB::Red);
+        FastLED.show();
+        delay(flashDelay);
+        fill_solid(leds, NUM_LEDS, CRGB::Black);
+        FastLED.show();
+        delay(flashDelay);
+
+        loopCounter++;
+      } else {
+        fill_solid(leds, NUM_LEDS, CRGB::Black);
+        FastLED.show();
+      }
+    }
+
     fill_solid(leds, NUM_LEDS, CRGB::Black);
-    FastLED.show();
-    delay(flashDelay);
   } else if (cm > ledMinDistance && cm < ledMaxDistance){ // calculate numLeds and light up based on distance
     fill_solid(leds, NUM_LEDS, CRGB::Black); 
   
